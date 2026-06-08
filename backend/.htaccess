@@ -1,0 +1,30 @@
+RewriteEngine On
+RewriteBase /
+
+# Handle CORS
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# Handle Options method for CORS
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Route /api/auth/* to api/auth.php
+RewriteRule ^api/auth/(.*)$ api/auth.php [QSA,L]
+
+# Route /api/articles/* to api/articles.php
+RewriteRule ^api/articles/(.*)$ api/articles.php [QSA,L]
+RewriteRule ^api/articles$ api/articles.php [QSA,L]
+
+# Route /api/herbs/* to api/herbs.php
+RewriteRule ^api/herbs/(.*)$ api/herbs.php [QSA,L]
+RewriteRule ^api/herbs$ api/herbs.php [QSA,L]
+
+# Route /api/categories/* to api/categories.php
+RewriteRule ^api/categories/(.*)$ api/categories.php [QSA,L]
+RewriteRule ^api/categories$ api/categories.php [QSA,L]
+
+# Route /api/search/* to api/search.php
+RewriteRule ^api/search/(.*)$ api/search.php [QSA,L]
+RewriteRule ^api/search$ api/search.php [QSA,L]

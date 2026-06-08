@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+.git
+.gitignore
+.dockerignore
+README.md
+task.md
+implementation_plan.md
+docker-compose.yml

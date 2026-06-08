@@ -1,0 +1,42 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tcm_platform
+    ports:
+      - "3388:3306" # 映射到宿主机3388端口，避免冲突，并在规则中要求显式暴露
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_NAME: tcm_platform
+      DB_USER: root
+      DB_PASS: root
+    ports:
+      - "8080:80"
+
+  frontend:
+    build: ./frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  mysql_data:

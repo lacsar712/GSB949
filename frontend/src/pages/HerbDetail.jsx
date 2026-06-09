@@ -1,19 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import request from '../utils/request';
+import { AuthContext } from '../App';
 import { LoadingSpinner } from '../components/Common/Loading';
 import { toast } from '../components/Common/Toast';
-import { ArrowLeft, Leaf, Activity, Beaker } from 'lucide-react';
+import { ArrowLeft, Leaf, Activity, Beaker, Heart } from 'lucide-react';
 
 const HerbDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user, authLoading } = useContext(AuthContext);
     const [herb, setHerb] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [favorited, setFavorited] = useState(false);
+    const [favLoading, setFavLoading] = useState(false);
 
     useEffect(() => {
         fetchHerb();
     }, [id]);
+
+    useEffect(() => {
+        if (authLoading) return;
+        if (user && id) {
+            checkFavorited();
+        } else {
+            setFavorited(false);
+        }
+    }, [id, user, authLoading]);
 
     const fetchHerb = async () => {
         setLoading(true);
@@ -25,6 +38,46 @@ const HerbDetail = () => {
             navigate('/herbs');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const checkFavorited = async () => {
+        try {
+            const res = await request.get('/favorites/check', { params: { herb_id: id } });
+            setFavorited(!!res.favorited);
+        } catch (e) {
+            // 静默：未登录或异常时默认未收藏
+            setFavorited(false);
+        }
+    };
+
+    const handleToggleFavorite = async () => {
+        if (!user) {
+            toast.info('请先登录后再收藏');
+            return;
+        }
+        if (favLoading) return;
+        setFavLoading(true);
+        try {
+            if (favorited) {
+                await request.delete(`/favorites/${id}`);
+                setFavorited(false);
+                toast.success('已取消收藏');
+            } else {
+                await request.post('/favorites', { herb_id: Number(id) });
+                setFavorited(true);
+                toast.success('收藏成功');
+            }
+        } catch (err) {
+            // 已收藏过（唯一索引冲突）也视为已收藏
+            if (err && err.favorited === true) {
+                setFavorited(true);
+                toast.info(err.message || '您已收藏过该中药');
+            } else {
+                toast.error(err?.message || '操作失败');
+            }
+        } finally {
+            setFavLoading(false);
         }
     };
 
@@ -86,10 +139,26 @@ const HerbDetail = () => {
                              </div>
                         )}
                         
-                        <div className="prose prose-sm text-gray-600">
+                        <div className="prose prose-sm text-gray-600 mb-6">
                              <h4 className="font-semibold text-gray-800 mb-2">简介</h4>
                              <p>{herb.efficacy?.substring(0, 100)}...</p>
                         </div>
+
+                        <button
+                            onClick={handleToggleFavorite}
+                            disabled={favLoading}
+                            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all duration-300 shadow-sm ${
+                                favorited
+                                    ? 'bg-rose-500 text-white hover:bg-rose-600'
+                                    : 'bg-white text-rose-600 border border-rose-200 hover:bg-rose-50'
+                            } ${favLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                        >
+                            <Heart
+                                className="w-4 h-4"
+                                fill={favorited ? 'currentColor' : 'none'}
+                            />
+                            {favorited ? '已收藏' : '收藏'}
+                        </button>
                     </div>
                 </div>
             </div>

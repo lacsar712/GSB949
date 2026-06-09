@@ -28,3 +28,7 @@ RewriteRule ^api/categories$ api/categories.php [QSA,L]
 # Route /api/search/* to api/search.php
 RewriteRule ^api/search/(.*)$ api/search.php [QSA,L]
 RewriteRule ^api/search$ api/search.php [QSA,L]
+
+# Route /api/favorites/* to api/favorites.php
+RewriteRule ^api/favorites/(.*)$ api/favorites.php [QSA,L]
+RewriteRule ^api/favorites$ api/favorites.php [QSA,L]

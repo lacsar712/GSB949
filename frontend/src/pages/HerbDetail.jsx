@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import request from '../utils/request';
 import { LoadingSpinner } from '../components/Common/Loading';
 import { toast } from '../components/Common/Toast';
+import FavoriteButton from '../components/Common/FavoriteButton';
 import { ArrowLeft, Leaf, Activity, Beaker } from 'lucide-react';
 
 const HerbDetail = () => {
@@ -67,6 +68,9 @@ const HerbDetail = () => {
                                 <Leaf size={64} />
                             </div>
                         )}
+                        <div className="absolute top-3 right-3">
+                            <FavoriteButton herbId={herb.id} size="large" />
+                        </div>
                     </div>
                     
                     <div className="p-8 md:w-2/3">

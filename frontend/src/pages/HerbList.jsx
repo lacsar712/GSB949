@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import request from '../utils/request';
 import { LoadingSkeleton } from '../components/Common/Loading';
 import Pagination from '../components/Common/Pagination';
+import FavoriteButton from '../components/Common/FavoriteButton';
 import { toast } from '../components/Common/Toast';
 import { Search, Leaf } from 'lucide-react';
 
@@ -90,36 +91,40 @@ const HerbList = () => {
             ) : herbs.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-2">
                     {herbs.map((herb) => (
-                        <Link 
-                            key={herb.id} 
-                            to={`/herbs/${herb.id}`}
-                            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl border border-stone-100 hover:border-primary-100 transition-all duration-500 transform hover:-translate-y-2 group flex flex-col h-full"
+                        <div 
+                            key={herb.id}
+                            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl border border-stone-100 hover:border-primary-100 transition-all duration-500 transform hover:-translate-y-2 group flex flex-col h-full relative"
                         >
-                            <div className="h-48 overflow-hidden bg-stone-100 relative">
-                                {herb.image ? (
-                                    <img 
-                                        src={herb.image} 
-                                        alt={herb.name} 
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-primary-200">
-                                         <Leaf size={40} />
-                                    </div>
-                                )}
+                            <div className="absolute top-3 right-3 z-10">
+                                <FavoriteButton herbId={herb.id} size="small" />
                             </div>
-                            <div className="p-5 flex-grow">
-                                <h3 className="font-bold font-serif text-xl text-stone-900 mb-2 group-hover:text-primary-700 transition-colors">{herb.name}</h3>
-                                {herb.category_name && (
-                                     <span className="inline-block text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full mb-3 font-medium">
-                                        {herb.category_name}
-                                     </span>
-                                )}
-                                <p className="text-sm text-stone-500 line-clamp-2 leading-relaxed" title={herb.efficacy}>
-                                    {herb.efficacy}
-                                </p>
-                            </div>
-                        </Link>
+                            <Link to={`/herbs/${herb.id}`} className="flex flex-col h-full">
+                                <div className="h-48 overflow-hidden bg-stone-100">
+                                    {herb.image ? (
+                                        <img 
+                                            src={herb.image} 
+                                            alt={herb.name} 
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-primary-200">
+                                             <Leaf size={40} />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="p-5 flex-grow">
+                                    <h3 className="font-bold font-serif text-xl text-stone-900 mb-2 group-hover:text-primary-700 transition-colors">{herb.name}</h3>
+                                    {herb.category_name && (
+                                         <span className="inline-block text-xs bg-primary-50 text-primary-700 px-2.5 py-1 rounded-full mb-3 font-medium">
+                                            {herb.category_name}
+                                         </span>
+                                    )}
+                                    <p className="text-sm text-stone-500 line-clamp-2 leading-relaxed" title={herb.efficacy}>
+                                        {herb.efficacy}
+                                    </p>
+                                </div>
+                            </Link>
+                        </div>
                     ))}
                 </div>
             ) : (

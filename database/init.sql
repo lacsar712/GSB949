@@ -75,6 +75,23 @@ CREATE TABLE `herbs` (
   CONSTRAINT `fk_herb_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ----------------------------
+-- Table structure for herb_favorites
+-- ----------------------------
+DROP TABLE IF EXISTS `herb_favorites`;
+CREATE TABLE `herb_favorites` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL COMMENT '用户ID',
+  `herb_id` int NOT NULL COMMENT '中药ID',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_herb` (`user_id`, `herb_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_herb_id` (`herb_id`),
+  CONSTRAINT `fk_favorite_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_favorite_herb` FOREIGN KEY (`herb_id`) REFERENCES `herbs` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户收藏中药表';
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ----------------------------

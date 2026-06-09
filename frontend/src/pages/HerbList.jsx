@@ -5,6 +5,7 @@ import { LoadingSkeleton } from '../components/Common/Loading';
 import Pagination from '../components/Common/Pagination';
 import { toast } from '../components/Common/Toast';
 import { Search, Leaf } from 'lucide-react';
+import FavoriteButton from '../components/Common/FavoriteButton';
 
 const HerbList = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -107,6 +108,9 @@ const HerbList = () => {
                                          <Leaf size={40} />
                                     </div>
                                 )}
+                                <div className="absolute top-2 right-2 z-10" onClick={(e) => e.stopPropagation()}>
+                                    <FavoriteButton herbId={herb.id} size="small" />
+                                </div>
                             </div>
                             <div className="p-5 flex-grow">
                                 <h3 className="font-bold font-serif text-xl text-stone-900 mb-2 group-hover:text-primary-700 transition-colors">{herb.name}</h3>

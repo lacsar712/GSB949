@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import ArticleDetail from './pages/ArticleDetail';
 import HerbList from './pages/HerbList';
 import HerbDetail from './pages/HerbDetail';
+import Favorites from './pages/Favorites';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import AdminDashboard from './pages/Admin/Dashboard';
@@ -46,6 +47,7 @@ function App() {
             <Route path="/article/:id" element={<ArticleDetail />} />
             <Route path="/herbs" element={<HerbList />} />
             <Route path="/herbs/:id" element={<HerbDetail />} />
+            <Route path="/favorites" element={<Favorites />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<AdminDashboard />} />

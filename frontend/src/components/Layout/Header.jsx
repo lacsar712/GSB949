@@ -52,6 +52,7 @@ const Header = () => {
   ];
 
   if (user) {
+    navLinks.push({ name: '我的收藏', path: '/favorites' });
     navLinks.push({ name: '管理后台', path: '/admin' });
   }
 

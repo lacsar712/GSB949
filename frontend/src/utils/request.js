@@ -14,10 +14,9 @@ request.interceptors.response.use(
   (error) => {
     if (error.response) {
       if (error.response.status === 401) {
-        // Redirect to login if checking auth status fails or api requires auth
-        // But don't redirect if it's just a check-auth call that's expected to fail for guests
         const isAuthCheck = error.config.url.includes('/auth/profile');
-        if (!isAuthCheck && !window.location.pathname.includes('/login')) {
+        const isFavoriteCheck = error.config.url.includes('/favorites/check');
+        if (!isAuthCheck && !isFavoriteCheck && !window.location.pathname.includes('/login')) {
             window.location.href = '/login';
         }
       }

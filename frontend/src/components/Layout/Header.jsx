@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../App';
 import request from '../../utils/request';
-import { Menu, X, Search, User, LogOut, LogIn } from 'lucide-react';
+import { Menu, X, Search, User, LogOut, LogIn, Heart } from 'lucide-react';
 import classNames from 'classnames';
 
 const Header = () => {
@@ -52,6 +52,7 @@ const Header = () => {
   ];
 
   if (user) {
+    navLinks.push({ name: '我的收藏', path: '/favorites' });
     navLinks.push({ name: '管理后台', path: '/admin' });
   }
 
@@ -95,6 +96,13 @@ const Header = () => {
 
             {user ? (
               <div className="flex items-center gap-4 ml-4">
+                <Link
+                  to="/favorites"
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                  title="我的收藏"
+                >
+                  <Heart className="w-5 h-5" />
+                </Link>
                 <span className="text-sm text-gray-700 flex items-center gap-1">
                   <User className="w-4 h-4" />
                   {user.username}

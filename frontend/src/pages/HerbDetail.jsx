@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import request from '../utils/request';
 import { LoadingSpinner } from '../components/Common/Loading';
 import { toast } from '../components/Common/Toast';
+import FavoriteButton from '../components/Common/FavoriteButton';
 import { ArrowLeft, Leaf, Activity, Beaker } from 'lucide-react';
 
 const HerbDetail = () => {
@@ -70,11 +71,12 @@ const HerbDetail = () => {
                     </div>
                     
                     <div className="p-8 md:w-2/3">
-                        <div className="flex flex-wrap items-baseline gap-4 mb-4">
+                        <div className="flex flex-wrap items-center gap-4 mb-4">
                             <h1 className="text-3xl font-bold text-gray-900">{herb.name}</h1>
                             {herb.alias && (
                                 <span className="text-gray-500 text-sm">别名：{herb.alias}</span>
                             )}
+                            <FavoriteButton herbId={herb.id} size="large" />
                         </div>
                         
                         {herb.category_name && (

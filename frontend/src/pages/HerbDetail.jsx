@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import request from '../utils/request';
 import { LoadingSpinner } from '../components/Common/Loading';
+import FavoriteButton from '../components/Common/FavoriteButton';
 import { toast } from '../components/Common/Toast';
 import { ArrowLeft, Leaf, Activity, Beaker } from 'lucide-react';
 
@@ -9,6 +10,7 @@ const HerbDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [herb, setHerb] = useState(null);
+    const [isFavorited, setIsFavorited] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,11 +22,23 @@ const HerbDetail = () => {
         try {
             const res = await request.get(`/herbs/${id}`);
             setHerb(res);
+            checkFavoriteStatus(parseInt(id));
         } catch (error) {
             toast.error('无法加载中药详情');
             navigate('/herbs');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const checkFavoriteStatus = async (herbId) => {
+        try {
+            const res = await request.get('/favorites', {
+                params: { check: 1, herb_id: herbId }
+            });
+            setIsFavorited(res.favorites.includes(herbId));
+        } catch (e) {
+            setIsFavorited(false);
         }
     };
 
@@ -70,11 +84,19 @@ const HerbDetail = () => {
                     </div>
                     
                     <div className="p-8 md:w-2/3">
-                        <div className="flex flex-wrap items-baseline gap-4 mb-4">
-                            <h1 className="text-3xl font-bold text-gray-900">{herb.name}</h1>
-                            {herb.alias && (
-                                <span className="text-gray-500 text-sm">别名：{herb.alias}</span>
-                            )}
+                        <div className="flex items-start justify-between gap-4 mb-4">
+                            <div className="flex flex-wrap items-baseline gap-4">
+                                <h1 className="text-3xl font-bold text-gray-900">{herb.name}</h1>
+                                {herb.alias && (
+                                    <span className="text-gray-500 text-sm">别名：{herb.alias}</span>
+                                )}
+                            </div>
+                            <FavoriteButton
+                                herbId={parseInt(id)}
+                                isFavorited={isFavorited}
+                                size="large"
+                                onToggle={(fav) => setIsFavorited(fav)}
+                            />
                         </div>
                         
                         {herb.category_name && (
